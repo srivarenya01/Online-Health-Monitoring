@@ -23,7 +23,7 @@ let loggedin = false;
 let username = "";
 
 app.get('/', function(req, res){
-    if(loggedin){
+    if(!loggedin){
         res.redirect('login');
     }
     res.redirect('user');
