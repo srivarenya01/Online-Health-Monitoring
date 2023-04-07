@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="signup-page">
+        <h1> Sign Up</h1>
+        <% if (message) { %>
+            <div class="alert"><%= message %></div>
+        <% } %>
+        <form method="post" action="/signup">
+            <label> Full Name</label>
+            <input type="text" placeholder="" name="name" autocomplete="off" required>
+            <label> Mobile Number</label>
+            <input type="tel" placeholder="" name="number" autocomplete="off">
+            <label> Email Address</label>
+            <input type="email" placeholder="" name="mail" autocomplete="off" required>
+            <label> Password</label>
+            <input type="password" placeholder="" name="password1" id="password1" autocomplete="off" required>
+             <label> Confirm Password</label>
+            <input type="password" placeholder="" name="password2" id="password2" autocomplete="off" required>
+            <input type="submit" value="Submit" id="submit-btn">
+        </form>
+    </div>
+    <p class="para1">Already have an account? <a href="login"> Login Here </a></p>
+    <script src="/script/password_check.js"></script>
+</body>
+</html>

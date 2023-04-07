@@ -1,0 +1,67 @@
+
+.signup-page{
+     width : 380px;
+     height :560px;
+     margin :auto;
+     background-color:#eceff1;
+     border-radius: 6px;
+     margin-top: 50px;
+     margin-bottom: 50px;
+}
+.login-page{
+     width:380px;
+     height:330px;
+     margin:auto;
+     border-radius: 6px;
+     margin-top: 80px;
+     background-color:#eceff1 ;
+
+}
+
+h1{
+    text-align: center;
+    padding-top: 20px;
+
+}
+ form{
+    width:300px;
+    margin-left: 20px;
+    
+}
+ form label{
+    display: flex;
+    margin-top: 20px;
+    font-size: 17px;
+} 
+ form input{
+    width: 100%;
+    padding:7px;
+    border: 1px solid grey;
+    border-radius: 6px;
+    outline:none;
+}
+input[type="submit"]{
+    width:320px;
+    height:35px;
+    margin-top:25px;
+    border:1px solid black;
+    background-color: #344a72;
+    color:white;
+    font-size: 19px;
+    
+}
+p{
+    text-align: center;
+    color:black;
+    /*margin-top: -10px;*/
+    font-size:15px ;
+}
+p a{
+    color:#344a72;
+}
+
+.alert{
+    color : red;
+    font-size : 17px;
+    margin-left: 15%;
+}
