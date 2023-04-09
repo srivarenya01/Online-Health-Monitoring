@@ -1,0 +1,9 @@
+<%- include('header.ejs', {pagename: pagename}); %>
+<%- include('navbar.ejs', {username: username}); %>
+    <div class="container-fluid">
+        <div class="center-all">
+            <h1 class="heading">Welcome <%= username %></h1>
+            <img class ="pic" src="/assets/dashboard.jpg" alt="Range of Tests">
+        </div>
+    </div>
+<%- include('footer.ejs'); %>

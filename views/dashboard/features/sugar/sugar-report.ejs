@@ -1,0 +1,20 @@
+<%- include('../../header.ejs', {pagename: pagename}); %>
+<%- include('../../navbar.ejs', {username: username}); %>
+    <div class="container-fluid">
+        <div class="feature-form myb-4">
+            <h1 class="heading">Members List</h1>
+            <select class="" name="members" onchange="location = this.value;">
+            <option value="">Select a member</option>
+            <% members.forEach(function(member) { %>
+                <option value="/user/report/sugar/<%= member.member_id %>"><%= member.member_name %></option>
+            <% }) %>
+            </select>
+        </div>
+            <% if (activeMember) { %>
+                <%- include('../member-details.ejs', {members: activeMember, single: true}); %>  
+                <%- include('./sugar-history.ejs', {sugarHistory : sugarHistory}); %>  
+
+            <% } %>
+    </div>
+<%- include('../../footer.ejs'); %>
+

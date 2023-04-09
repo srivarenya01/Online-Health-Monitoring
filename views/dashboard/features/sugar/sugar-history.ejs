@@ -1,0 +1,26 @@
+<h1 class="center-all">History</h1>
+<table>
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>FBS</th>
+            <th>Result</th>
+            <th>PBS</th>
+            <th>Result</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let i=1 %>
+        <% sugarHistory.forEach(function(data) { %>
+        <tr>
+            <td><%= i++ %></td>
+            <td><%= data.fbs %></td>
+            <td><%= data.fbs_o %></td>
+            <td><%= data.pbs %></td>
+            <td><%= data.pbs_o %></td>
+            <td><%= data.created_at %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>

@@ -1,0 +1,24 @@
+<h1 class="center-all">History</h1>
+<table>
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Sys</th>
+            <th>Dia</th>
+            <th>Result</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% let i=1 %>
+        <% bpHistory.forEach(function(data) { %>
+        <tr>
+            <td><%= i++ %></td>
+            <td><%= data.sys %></td>
+            <td><%= data.dia %></td>
+            <td><%= data.result %></td>
+            <td><%= data.timestamp %></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>

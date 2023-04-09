@@ -1,0 +1,26 @@
+<%- include('../../header.ejs', {pagename: pagename}); %>
+<%- include('../../navbar.ejs', {username: username}); %>
+    <div class="container-fluid">
+        <% if (message) { %>
+            <div class="alert"><%= message %></div>
+        <% } %>
+        <div class = "poo">
+            <h1 class="heading">Blood Pressure</h1>
+                <form class="feature-form" method="post" action="bp-monitor">
+                    <label> Name</label>
+                    <select id="familyMembers" name="member">
+                        <% familyMembers = Array.from(familyMembers); %>
+                        <% familyMembers.forEach(function(member) { %>
+                        <option value="<%= member.member_id %>"><%= member.member_name %></option>
+                        <% }); %>
+                    </select>
+                    <label> Sys</label>
+                    <input type="text" name="sys" required>
+                    <label> Dia</label>
+                    <input type="text" name="dia" required>
+                    <input type="submit" value="Submit">
+                </form>
+        </div>    
+    </div>
+<%- include('../../footer.ejs'); %>
+

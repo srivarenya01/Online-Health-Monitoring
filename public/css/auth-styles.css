@@ -15,18 +15,15 @@
      border-radius: 6px;
      margin-top: 80px;
      background-color:#eceff1 ;
-
 }
 
 h1{
     text-align: center;
     padding-top: 20px;
-
 }
  form{
     width:300px;
     margin-left: 20px;
-    
 }
  form label{
     display: flex;

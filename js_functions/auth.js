@@ -8,12 +8,17 @@ const logincheck = (req, res) => {
         console.error('Error retrieving data from database: ', error);
       } else {
         console.log('Data retrieved from database');
-        if (results[0].password === body.password){
-            req.session.authenticated = true;
-            req.session.username = results[0].username;
-            res.redirect('/');
+        if(results.length === 0){
+            res.render('login/login.ejs', {message : " Email Address Doesn't Exist !!!"});
         }else{
-            res.render('login/login.ejs', {message : "Incorrect Password !!!"});
+            if (results[0].password === body.password){
+                req.session.authenticated = true;
+                req.session.username = results[0].username;
+                req.session.userid = body.mail;
+                res.redirect('/');
+            }else{
+                res.render('login/login.ejs', {message : "Incorrect Password !!!"});
+            }
         }
       }
     });

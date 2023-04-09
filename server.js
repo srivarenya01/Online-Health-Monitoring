@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(session({
     secret: 'secret-key',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }));
 
 app.get('/', function(req, res){
@@ -27,10 +27,8 @@ app.get('/', function(req, res){
 
 app.use('/login', require('./routes/login'));
 app.use('/signup', require('./routes/signup'));
-
-app.get('/user', function(req, res){
-    res.render('dashboard/open.ejs', {username : req.session.username});
-});
+app.use('/user', require('./routes/user'));
+app.use('/report', require('./routes/user'));
 
 app.listen(3000, function(){
     console.log('Listening on port 3000');

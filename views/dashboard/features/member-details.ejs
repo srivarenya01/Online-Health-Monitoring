@@ -1,0 +1,32 @@
+<% if(members.length != 0){ %>
+    <% if(!single){ %>
+        <h1 class="center-all">Members</h1>
+    <% } %>
+    <table>
+        <thead>
+            <tr>
+                <% if(!single){ %>
+                    <th>ID</th>
+                <% } %>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Weight</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% let i=1 %>
+            <% members.forEach(function(member) { %>
+            <tr>
+                <% if(!single){ %>
+                    <td><%= i++ %></td>
+                <% } %>
+                <td><%= member.member_name %></td>
+                <td><%= member.age %></td>
+                <td><%= member.gender %></td>
+                <td><%= member.weight %></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+<% } %>

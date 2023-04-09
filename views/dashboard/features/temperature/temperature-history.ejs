@@ -1,0 +1,22 @@
+    <h1 class="center-all">History</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Temperature</th>
+                <th>Result</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% let i=1 %>
+            <% tempHistory.forEach(function(data) { %>
+            <tr>
+                <td><%= i++ %></td>
+                <td><%= data.temperature %></td>
+                <td><%= data.check %></td>
+                <td><%= data.inserted_at %></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>

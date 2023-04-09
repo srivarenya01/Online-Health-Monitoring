@@ -1,0 +1,29 @@
+<%- include('../header.ejs', {pagename: pagename}); %>
+<%- include('../navbar.ejs', {username: username}); %>
+<div class="container-fluid">
+        <%- include('./member-details.ejs', {members: members, single:false}); %>
+        <% if (message) { %>
+            <div class="alert"><%= message %></div>
+        <% } %>
+        <div class="poo">
+            <h1 class="heading">Add Member</h1>
+            <form class="feature-form" method="post" action="members">
+                <label>Full Name</label>
+                <input type="text" name="member_name">
+                <label>Age</label>
+                <input type="number" name="age">
+                <label>Gender</label>
+                <select name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <label>Weight</label>
+                <input type="number" name="weight">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        
+    
+    </div>
+<%- include('../footer.ejs'); %>
+
