@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const {addMember, getMembers } = require('../js_functions/member-function')
-const {addTemperature, tempreport} = require('../js_functions/temperature-function')
-const {addSugar, sugarreport} = require('../js_functions/sugar-function');
-const {addbp, bpreport} = require('../js_functions/bp-function');
+const {addMember, getMembers, delmember} = require('../js_functions/member-function');
+const {addTemperature, tempreport, tempdelete} = require('../js_functions/temperature-function');
+const {addSugar, sugarreport, sugardelete} = require('../js_functions/sugar-function');
+const {addbp, bpreport, bpdelete} = require('../js_functions/bp-function');
 
 router.get('/', function(req, res){
     if(req.session.authenticated){
@@ -136,6 +136,11 @@ router.get('/temperature-report', function(req, res){
 router.get('/report/temp/:id', tempreport);
 router.get('/report/sugar/:id', sugarreport);
 router.get('/report/bp/:id', bpreport);
+
+router.get('/report/temp/:id/delete', tempdelete);
+router.get('/report/sugar/:id/delete', sugardelete);
+router.get('/report/bp/:id/delete', bpdelete);
+router.get('/members/delete/:id', delmember);
   
 
 module.exports = router;

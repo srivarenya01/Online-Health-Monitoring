@@ -103,10 +103,39 @@ const sugarreport = (req, res) =>{
         res.redirect("/");
     }
 }
-  
+
+const sugardelete = (req, res) => {
+    if(req.session.authenticated){  
+        const id = req.params.id;
+        const sql = "DELETE FROM sugar WHERE member_id = ?";
+        user_details_con.query(sql, [id], function(err, result){
+            if(err){
+                console.error(err);
+                res.redirect('users/dashboard');
+            }else{  
+                get_sugar_history(id).then(function(history){
+                    getmember(id).then(function(activeMember){
+                        getMembers(req.session.userid).then(function(members){
+                            res.render('dashboard/features/sugar/sugar-report.ejs', {
+                                pagename : "Sugar Report",
+                                username : req.session.username,
+                                members : members, 
+                                activeMember : activeMember,
+                                sugarHistory : history
+                            });
+                        });
+                    }); 
+                });    
+            }    
+        });
+    }else{
+        res.redirect("/");
+    }
+}
   
 
 module.exports = {
     addSugar : addSugar,
-    sugarreport : sugarreport
+    sugarreport : sugarreport,
+    sugardelete : sugardelete
 }

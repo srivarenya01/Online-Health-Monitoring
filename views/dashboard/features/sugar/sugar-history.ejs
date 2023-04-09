@@ -8,6 +8,7 @@
             <th>PBS</th>
             <th>Result</th>
             <th>Time</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,9 @@
             <td><%= data.pbs %></td>
             <td><%= data.pbs_o %></td>
             <td><%= data.created_at %></td>
+            <td>
+                <a href="#" onclick="redirectToDelete()">Delete</a>
+            </td>
         </tr>
         <% }); %>
     </tbody>

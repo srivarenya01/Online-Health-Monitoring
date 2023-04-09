@@ -6,6 +6,7 @@
                 <th>Temperature</th>
                 <th>Result</th>
                 <th>Time</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +17,9 @@
                 <td><%= data.temperature %></td>
                 <td><%= data.check %></td>
                 <td><%= data.inserted_at %></td>
+                <td>
+                    <a href="#" onclick="redirectToDelete()">Delete</a>
+                </td>
             </tr>
             <% }); %>
         </tbody>

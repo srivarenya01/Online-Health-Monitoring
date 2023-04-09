@@ -94,10 +94,39 @@ const bpreport = (req, res) =>{
         res.redirect("/");
     }
 }
-  
+
+const bpdelete = (req, res) => {
+    if(req.session.authenticated){  
+        const id = req.params.id;
+        const sql = "DELETE FROM bp WHERE member_id = ?";
+        user_details_con.query(sql, [id], function(err, result){
+            if(err){
+                console.error(err);
+                res.redirect('/users/dashboard');
+            }else{  
+                get_bp_history(id).then(function(history){
+                    getmember(id).then(function(activeMember){
+                        getMembers(req.session.userid).then(function(members){
+                            res.render('dashboard/features/bp/bp-report.ejs', {
+                                pagename : "BP Report",
+                                username : req.session.username,
+                                members : members, 
+                                activeMember : activeMember,
+                                bpHistory : history
+                            });
+                        });
+                    }); 
+                });    
+            }    
+        });
+    }else{
+        res.redirect("/");
+    }
+}
   
 
 module.exports = {
     addbp : addbp,
-    bpreport : bpreport
+    bpreport : bpreport,
+    bpdelete : bpdelete
 }

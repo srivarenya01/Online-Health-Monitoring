@@ -30,7 +30,7 @@ const getMembers = (userid) => {
         user_details_con.query(sql, [userid], function(err, result){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
+                res.redirect('user/dashboard');
             }else{
                 let arr = Array.from(result);
                 arr.forEach(function(member){
@@ -54,7 +54,7 @@ const getmember = (id) => {
         user_details_con.query(sql, [id], function(err, result){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
+                res.redirect('user/dashboard');
             }else{  
                 resolve(result);
             }     
@@ -62,8 +62,28 @@ const getmember = (id) => {
     });
 }
 
+const delmember = (req, res) => {
+    id = req.params.id;
+    console.log('here : ', id);
+    if(req.session.authenticated){  
+        const id = req.params.id;
+        const sql = "DELETE FROM members WHERE member_id = ?";
+        user_details_con.query(sql, [id], function(err, result){
+            if(err){
+                console.error('error : ', err);
+                res.redirect('/user/dashboard');
+            }else{  
+                res.redirect('/user/members');
+            }    
+        });
+    }else{
+        res.redirect("/");
+    }
+}
+
 module.exports = {
     addMember : addMember,
     getMembers : getMembers,
-    getmember : getmember
+    getmember : getmember,
+    delmember : delmember
 }

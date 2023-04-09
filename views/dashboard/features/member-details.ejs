@@ -6,12 +6,15 @@
         <thead>
             <tr>
                 <% if(!single){ %>
-                    <th>ID</th>
+                    <th>S.No</th>
                 <% } %>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Gender</th>
                 <th>Weight</th>
+                <% if(!single){ %>
+                    <th>Delete</th>
+                <% } %>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +28,11 @@
                 <td><%= member.age %></td>
                 <td><%= member.gender %></td>
                 <td><%= member.weight %></td>
+                <% if(!single){%>
+                    <td>
+                        <a href="members/delete/<%= member.member_id %>">Delete</a>   
+                    </td>
+                <% } %>
             </tr>
             <% }); %>
         </tbody>
