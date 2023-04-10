@@ -107,10 +107,8 @@ const bpreport = (req, res) =>{
     }
 }
 
-const bpdelete = (req, res) => {
-    if(req.session.authenticated){  
-        const id = req.params.id;
-        const sql = "DELETE FROM bp WHERE member_id = ?";
+const del = (id, req, res) => {
+    const sql = "DELETE FROM bp WHERE member_id = ?";
         user_details_con.query(sql, [id], function(err, result){
             if(err){
                 console.error(err);
@@ -130,6 +128,25 @@ const bpdelete = (req, res) => {
                     }); 
                 });    
             }    
+        });
+}
+
+const bpdelete = (req, res) => {
+    if(req.session.authenticated){  
+        const id = req.params.id;
+        const getusr = "SELECT user_id FROM members WHERE member_id = ?";
+        user_details_con.query(getusr, [id], function(err, results){
+            if(err){
+                console.error(err);
+                res.redirect('/user/dashboard');
+            }else{
+                if(results[0].user_id === req.session.userid){
+                    del(id, req, res);
+                    res.redirect('/user/bp-report');
+                }else{
+                    res.redirect('/user/dashboard');
+                }
+            }
         });
     }else{
         res.redirect("/");

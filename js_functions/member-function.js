@@ -12,7 +12,7 @@ const addMember = (req, res) =>{
                 pagename : "Members",
                 username : req.session.username,
                 message : "Negative Age !!",
-                members : req.members
+                members : members
             });
         });
     }else if(age > 100){
@@ -21,7 +21,7 @@ const addMember = (req, res) =>{
                 pagename : "Members",
                 username : req.session.username,
                 message : "Die for the sake of humanity !!",
-                members : req.members
+                members : members
             });
         });
     }else if(weight < 0){
@@ -30,7 +30,7 @@ const addMember = (req, res) =>{
                 pagename : "Members",
                 username : req.session.username,
                 message : "Negative Weight !!",
-                members : req.members
+                members : members
             });
         });
     }else{
@@ -38,15 +38,17 @@ const addMember = (req, res) =>{
         user_details_con.query(sql, [req.session.userid, member_name, age, weight, gender], function(err, result){
             if(err){
                 console.error('error : ', err);
-                res.render('dashboard/features/members.ejs', {
-                    pagename : "Members",
-                    username : req.session.username,
-                    message : "Failed in Inserting Member !!",
-                    members : req.members
+                getMembers(req.session.userid).then(function(members){
+                    res.render('dashboard/features/members.ejs', {
+                        pagename : "Members",
+                        username : req.session.username,
+                        message : "Failed in Inserting Member !!",
+                        members : members
+                    });
                 });
             }else{
                 console.log("Inserted Successfully");
-                res.redirect('/user/members')
+                res.redirect('/user/members');
             }
         });
     }

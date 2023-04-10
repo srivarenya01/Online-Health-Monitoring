@@ -122,7 +122,7 @@ const tempreport = (req, res) => {
     }
 }
 
-const del = (id) => {
+const del = (id, req, res) => {
     const sql = "DELETE FROM temperature WHERE member_id = ?";
     user_details_con.query(sql, [id], function(err, result){
         if(err){
@@ -156,7 +156,8 @@ const tempdelete = (req, res) => {
                 res.redirect('/user/dashboard');
             }else{
                 if(results[0].user_id === req.session.userid){
-                    del(id);
+                    del(id, req, res);
+                    res.redirect('/user/temperature-report');
                 }else{
                     res.redirect('/user/dashboard');
                 }

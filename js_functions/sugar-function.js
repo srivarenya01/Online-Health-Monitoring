@@ -31,7 +31,7 @@ const addSugar = (req, res) => {
     let fbs = body.fbs;
     let pbs = body.pbs;
 
-    if(sys< 0|| dia<0){
+    if(fbs< 0|| pbs<0){
         getMembers(req.session.userid).then(function(members){
             res.render('dashboard/features/sugar/sugar-monitor.ejs', {
                 pagename : "Sugar Monitor",
@@ -115,7 +115,7 @@ const sugarreport = (req, res) =>{
     }
 }
 
-const del = (id) => {
+const del = (id, req, res) => {
     const sql = "DELETE FROM sugar WHERE member_id = ?";
     user_details_con.query(sql, [id], function(err, result){
         if(err){
@@ -149,7 +149,8 @@ const sugardelete = (req, res) => {
                 res.redirect('/user/dashboard');
             }else{
                 if(results[0].user_id === req.session.userid){
-                    del(id);
+                    del(id, req, res);
+                    res.redirect('/user/blood-sugar-report');
                 }else{
                     res.redirect('/user/dashboard');
                 }
