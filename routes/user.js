@@ -15,6 +15,10 @@ router.get('/', function(req, res){
     }
 });
 
+router.get('/dashboard', function(req, res){
+    res.redirect("/");
+});
+
 router.get('/members', function(req, res){
     if(req.session.authenticated){
         getMembers(req.session.userid).then(function(members){

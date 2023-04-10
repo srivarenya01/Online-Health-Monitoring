@@ -31,38 +31,49 @@ const addSugar = (req, res) => {
     let fbs = body.fbs;
     let pbs = body.pbs;
 
-    const get_member = "SELECT member_name FROM members WHERE member_id = ?"
-    user_details_con.query(get_member, [member_id], function(err, result){
-        if(err){
-            console.error('error : ', err);
-            getMembers(req.session.userid).then(function(members){
-                res.render('dashboard/features/sugar/sugar-monitor.ejs', {
-                    pagename : "Sugar Monitor",
-                    familyMembers : members,
-                    username : req.session.username,
-                    message : "Insertion Failed"
-                });
+    if(sys< 0|| dia<0){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/sugar/sugar-monitor.ejs', {
+                pagename : "Sugar Monitor",
+                familyMembers : members,
+                username : req.session.username,
+                message : "Negitive Values !!"
             });
-        }else{
-            member_name = result[0].member_name;
-            const sql = "INSERT INTO sugar(member_id, member_name, fbs, pbs) VALUES (?, ?, ?, ?)";
-            user_details_con.query(sql, [member_id, member_name, fbs, pbs], function(err, result){
-                if(err){
-                    console.error('Error : ', err);
-                    getMembers(req.session.userid).then(function(members){
-                        res.render('dashboard/features/sugar/sugar-monitor.ejs', {
-                            pagename : "Sugar Monitor",
-                            familyMembers : members,
-                            username : req.session.username,
-                            message : "Insertion Failed"
-                        });
+        });
+    }else{
+        const get_member = "SELECT member_name FROM members WHERE member_id = ?"
+        user_details_con.query(get_member, [member_id], function(err, result){
+            if(err){
+                console.error('error : ', err);
+                getMembers(req.session.userid).then(function(members){
+                    res.render('dashboard/features/sugar/sugar-monitor.ejs', {
+                        pagename : "Sugar Monitor",
+                        familyMembers : members,
+                        username : req.session.username,
+                        message : "Insertion Failed"
                     });
-                }else{
-                    res.redirect('blood-sugar-report');
-                }
-            });
-        }
-    });
+                });
+            }else{
+                member_name = result[0].member_name;
+                const sql = "INSERT INTO sugar(member_id, member_name, fbs, pbs) VALUES (?, ?, ?, ?)";
+                user_details_con.query(sql, [member_id, member_name, fbs, pbs], function(err, result){
+                    if(err){
+                        console.error('Error : ', err);
+                        getMembers(req.session.userid).then(function(members){
+                            res.render('dashboard/features/sugar/sugar-monitor.ejs', {
+                                pagename : "Sugar Monitor",
+                                familyMembers : members,
+                                username : req.session.username,
+                                message : "Insertion Failed"
+                            });
+                        });
+                    }else{
+                        res.redirect('blood-sugar-report');
+                    }
+                });
+            }
+        });
+    }
 }
 
 const get_sugar_history = (id) => {
@@ -71,7 +82,7 @@ const get_sugar_history = (id) => {
         user_details_con.query(sql, [id], function(err, result){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
+                res.redirect('/users/dashboard');
             }else{  
                 result.forEach(data => {
                     data.pbs_o = pbs_check(data.pbs);
@@ -104,29 +115,45 @@ const sugarreport = (req, res) =>{
     }
 }
 
+const del = (id) => {
+    const sql = "DELETE FROM sugar WHERE member_id = ?";
+    user_details_con.query(sql, [id], function(err, result){
+        if(err){
+            console.error(err);
+            res.redirect('/users/dashboard');
+        }else{  
+            get_sugar_history(id).then(function(history){
+                getmember(id).then(function(activeMember){
+                    getMembers(req.session.userid).then(function(members){
+                        res.render('dashboard/features/sugar/sugar-report.ejs', {
+                            pagename : "Sugar Report",
+                            username : req.session.username,
+                            members : members, 
+                            activeMember : activeMember,
+                            sugarHistory : history
+                        });
+                    });
+                }); 
+            });    
+        }    
+    });
+}
+
 const sugardelete = (req, res) => {
     if(req.session.authenticated){  
         const id = req.params.id;
-        const sql = "DELETE FROM sugar WHERE member_id = ?";
-        user_details_con.query(sql, [id], function(err, result){
+        const getusr = "SELECT user_id FROM members WHERE member_id = ?";
+        user_details_con.query(getusr, [id], function(err, results){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
-            }else{  
-                get_sugar_history(id).then(function(history){
-                    getmember(id).then(function(activeMember){
-                        getMembers(req.session.userid).then(function(members){
-                            res.render('dashboard/features/sugar/sugar-report.ejs', {
-                                pagename : "Sugar Report",
-                                username : req.session.username,
-                                members : members, 
-                                activeMember : activeMember,
-                                sugarHistory : history
-                            });
-                        });
-                    }); 
-                });    
-            }    
+                res.redirect('/user/dashboard');
+            }else{
+                if(results[0].user_id === req.session.userid){
+                    del(id);
+                }else{
+                    res.redirect('/user/dashboard');
+                }
+            }
         });
     }else{
         res.redirect("/");

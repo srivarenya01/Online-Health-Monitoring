@@ -23,38 +23,50 @@ const addbp = (req, res) => {
     let sys = body.sys;
     let dia = body.dia;
 
-    const get_member = "SELECT member_name FROM members WHERE member_id = ?"
-    user_details_con.query(get_member, [member_id], function(err, result){
-        if(err){
-            console.error('error : ', err);
-            getMembers(req.session.userid).then(function(members){
-                res.render('dashboard/features/bp/bp-monitor.ejs', {
-                    pagename : "BP Monitor",
-                    familyMembers : members,
-                    username : req.session.username,
-                    message : "Insertion Failed"
-                });
+    if(sys< 0|| dia<0){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/bp/bp-monitor.ejs', {
+                pagename : "BP Monitor",
+                familyMembers : members,
+                username : req.session.username,
+                message : "Negative Values !!"
             });
-        }else{
-            member_name = result[0].member_name;
-            const sql = "INSERT INTO bp(member_id, member_name, sys, dia) VALUES (?, ?, ?, ?)";
-            user_details_con.query(sql, [member_id, member_name, sys, dia], function(err, result){
-                if(err){
-                    console.error('Error : ', err);
-                    getMembers(req.session.userid).then(function(members){
-                        res.render('dashboard/features/bp/bp-monitor.ejs', {
-                            pagename : "BP Monitor",
-                            familyMembers : members,
-                            username : req.session.username,
-                            message : "Insertion Failed"
-                        });
+        });
+    }else{
+        const get_member = "SELECT member_name FROM members WHERE member_id = ?"
+        user_details_con.query(get_member, [member_id], function(err, result){
+            if(err){
+                console.error('error : ', err);
+                getMembers(req.session.userid).then(function(members){
+                    res.render('dashboard/features/bp/bp-monitor.ejs', {
+                        pagename : "BP Monitor",
+                        familyMembers : members,
+                        username : req.session.username,
+                        message : "Insertion Failed"
                     });
-                }else{
-                    res.redirect('bp-report');
-                }
-            });
-        }
-    });
+                });
+            }else{
+                member_name = result[0].member_name;
+                const sql = "INSERT INTO bp(member_id, member_name, sys, dia) VALUES (?, ?, ?, ?)";
+                user_details_con.query(sql, [member_id, member_name, sys, dia], function(err, result){
+                    if(err){
+                        console.error('Error : ', err);
+                        getMembers(req.session.userid).then(function(members){
+                            res.render('dashboard/features/bp/bp-monitor.ejs', {
+                                pagename : "BP Monitor",
+                                familyMembers : members,
+                                username : req.session.username,
+                                message : "Insertion Failed"
+                            });
+                        });
+                    }else{
+                        res.redirect('bp-report');
+                    }
+                });
+            }
+        });
+    }
+
 }
 
 const get_bp_history = (id) => {
@@ -63,7 +75,7 @@ const get_bp_history = (id) => {
         user_details_con.query(sql, [id], function(err, result){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
+                res.redirect('/users/dashboard');
             }else{  
                 result.forEach(data => {
                     data.result = bp_check(data.sys, data.dia);

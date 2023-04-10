@@ -6,38 +6,49 @@ const addTemperature = (req, res)=>{
     let member_id = body.member;
     let temp = body.temp;
 
-    const get_member = "SELECT member_name FROM members WHERE member_id = ?"
-    user_details_con.query(get_member, [member_id], function(err, result){
-        if(err){
-            console.error('error : ', err);
-            getMembers(req.session.userid).then(function(members){
-                res.render('dashboard/features/temperature/temperature.ejs', {
-                    pagename : "Temperature",
-                    familyMembers : members,
-                    username : req.session.username,
-                    message : "Insertion Failed"
-                });
+    if(temp < 0){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/temperature/temperature.ejs', {
+                pagename : "Temperature",
+                familyMembers : members,
+                username : req.session.username,
+                message : "Person Dead !!"
             });
-        }else{
-            member_name = result[0].member_name;
-            const sql = "INSERT INTO temperature(member_id, member_name, temperature) VALUES (?, ?, ?)";
-            user_details_con.query(sql, [member_id, member_name, temp], function(err, result){
-                if(err){
-                    console.error('Error : ', err);
-                    getMembers(req.session.userid).then(function(members){
-                        res.render('dashboard/features/temperature/temperature.ejs', {
-                            pagename : "Temperature",
-                            familyMembers : members,
-                            username : req.session.username,
-                            message : "Insertion Failed"
-                        });
+        });
+    }else{
+        const get_member = "SELECT member_name FROM members WHERE member_id = ?"
+        user_details_con.query(get_member, [member_id], function(err, result){
+            if(err){
+                console.error('error : ', err);
+                getMembers(req.session.userid).then(function(members){
+                    res.render('dashboard/features/temperature/temperature.ejs', {
+                        pagename : "Temperature",
+                        familyMembers : members,
+                        username : req.session.username,
+                        message : "Insertion Failed"
                     });
-                }else{
-                    res.redirect('temperature-report');
-                }
-            });
-        }
-    });
+                });
+            }else{
+                member_name = result[0].member_name;
+                const sql = "INSERT INTO temperature(member_id, member_name, temperature) VALUES (?, ?, ?)";
+                user_details_con.query(sql, [member_id, member_name, temp], function(err, result){
+                    if(err){
+                        console.error('Error : ', err);
+                        getMembers(req.session.userid).then(function(members){
+                            res.render('dashboard/features/temperature/temperature.ejs', {
+                                pagename : "Temperature",
+                                familyMembers : members,
+                                username : req.session.username,
+                                message : "Insertion Failed"
+                            });
+                        });
+                    }else{
+                        res.redirect('temperature-report');
+                    }
+                });
+            }
+        });
+    }
 }
 
 const temp_check = (temperature) => {
@@ -61,7 +72,7 @@ const get_temp_history = (id) => {
         user_details_con.query(sql, [id], function(err, result){
             if(err){
                 console.error(err);
-                res.redirect('users/dashboard');
+                res.redirect('/user/dashboard');
             }else{  
                 result.forEach(data => {
                     temp_check(data.temperature).then(function(result){
@@ -74,50 +85,82 @@ const get_temp_history = (id) => {
     });
 }
 
+const rep = (memberId, req, res) => {
+    get_temp_history(memberId).then(function(history){
+        getmember(memberId).then(function(activeMember){
+            getMembers(req.session.userid).then(function(members){
+                res.render('dashboard/features/temperature/temperature-report.ejs', {
+                    pagename : "Temperature Report",
+                    username : req.session.username,
+                    members : members, 
+                    activeMember : activeMember,
+                    tempHistory : history
+                })
+            });
+        }); 
+    });
+}
+
 const tempreport = (req, res) => {
     if(req.session.authenticated){  
         const memberId = req.params.id;
-        get_temp_history(memberId).then(function(history){
-            getmember(memberId).then(function(activeMember){
-                getMembers(req.session.userid).then(function(members){
-                    res.render('dashboard/features/temperature/temperature-report.ejs', {
-                        pagename : "Temperature Report",
-                        username : req.session.username,
-                        members : members, 
-                        activeMember : activeMember,
-                        tempHistory : history
-                    })
-                });
-            }); 
+        const getusr = "SELECT user_id FROM members WHERE member_id = ?";
+        user_details_con.query(getusr, [memberId], function(err, results){
+            if(err){
+                console.error(err);
+                res.redirect('/user/dashboard');
+            }else{
+                if(results[0].user_id === req.session.userid){
+                    rep(memberId, req, res);
+                }else{
+                    res.redirect('/user/dashboard');
+                }
+            }
         });
     }else{
         res.redirect("/");
     }
 }
 
+const del = (id) => {
+    const sql = "DELETE FROM temperature WHERE member_id = ?";
+    user_details_con.query(sql, [id], function(err, result){
+        if(err){
+            console.error(err);
+            res.redirect('/user/dashboard');
+        }else{  
+            get_temp_history(id).then(function(history){
+                getmember(id).then(function(activeMember){
+                    getMembers(req.session.userid).then(function(members){
+                        res.render('dashboard/features/temperature/temperature-report.ejs', {
+                            pagename : "Temperature Report",
+                            username : req.session.username,
+                            members : members, 
+                            activeMember : activeMember,
+                            tempHistory : history
+                        });
+                    });
+                }); 
+            });    
+        }    
+    });
+}
+
 const tempdelete = (req, res) => {
     if(req.session.authenticated){  
         const id = req.params.id;
-        const sql = "DELETE FROM temperature WHERE member_id = ?";
-        user_details_con.query(sql, [id], function(err, result){
+        const getusr = "SELECT user_id FROM members WHERE member_id = ?";
+        user_details_con.query(getusr, [id], function(err, results){
             if(err){
                 console.error(err);
-                res.redirect('/users/dashboard');
-            }else{  
-                get_temp_history(id).then(function(history){
-                    getmember(id).then(function(activeMember){
-                        getMembers(req.session.userid).then(function(members){
-                            res.render('dashboard/features/temperature/temperature-report.ejs', {
-                                pagename : "Temperature Report",
-                                username : req.session.username,
-                                members : members, 
-                                activeMember : activeMember,
-                                tempHistory : history
-                            });
-                        });
-                    }); 
-                });    
-            }    
+                res.redirect('/user/dashboard');
+            }else{
+                if(results[0].user_id === req.session.userid){
+                    del(id);
+                }else{
+                    res.redirect('/user/dashboard');
+                }
+            }
         });
     }else{
         res.redirect("/");
