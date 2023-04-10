@@ -1,8 +1,8 @@
 window.addEventListener('DOMContentLoaded', event => {
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
-        if(window.innerWidth < 750){
-            document.body.classList.toggle('sb-sidenav-toggled');
+        if(window.screen.width < 750){
+            document.body.classList.remove('sb-sidenav-toggled');
         }
         if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
         }
