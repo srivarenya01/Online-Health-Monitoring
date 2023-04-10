@@ -46,7 +46,7 @@ const addMember = (req, res) =>{
                 });
             }else{
                 console.log("Inserted Successfully");
-                res.redirect('/users/members')
+                res.redirect('/user/members')
             }
         });
     }
