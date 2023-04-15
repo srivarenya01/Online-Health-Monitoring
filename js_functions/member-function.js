@@ -15,7 +15,7 @@ const addMember = (req, res) =>{
                 members : members
             });
         });
-    }else if(age > 100){
+    }else if(age >= 200){
         getMembers(req.session.userid).then(function(members){  
             res.render('dashboard/features/members.ejs', {
                 pagename : "Members",

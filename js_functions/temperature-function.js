@@ -101,6 +101,22 @@ const rep = (memberId, req, res) => {
     });
 }
 
+const getTempDates = (req, res) => {
+    const memberId = req.params.id;
+    getmember(memberId).then(function(activeMember){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/temperature/temperature-report.ejs', {
+                pagename : "Temperature Report",
+                username : req.session.username,
+                members : members, 
+                activeMember : activeMember,
+                tempHistory : null, 
+                req_id : memberId
+            })
+        });
+    }); 
+}
+
 const tempreport = (req, res) => {
     if(req.session.authenticated){  
         const memberId = req.params.id;
@@ -171,5 +187,6 @@ const tempdelete = (req, res) => {
 module.exports = {
     addTemperature : addTemperature,
     tempreport : tempreport,
-    tempdelete : tempdelete
+    tempdelete : tempdelete,
+    getTempDates : getTempDates
 }

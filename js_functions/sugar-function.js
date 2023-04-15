@@ -37,7 +37,7 @@ const addSugar = (req, res) => {
                 pagename : "Sugar Monitor",
                 familyMembers : members,
                 username : req.session.username,
-                message : "Negitive Values !!"
+                message : "Negative Values !!"
             });
         });
     }else{
@@ -92,6 +92,22 @@ const get_sugar_history = (id) => {
             }     
         });     
     });
+}
+
+const getSugarDates = (req, res) => {
+    const memberId = req.params.id;
+    getmember(memberId).then(function(activeMember){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/sugar/sugar-report.ejs', {
+                pagename : "Sugar Report",
+                username : req.session.username,
+                members : members, 
+                activeMember : activeMember,
+                sugarHistory : null, 
+                req_id : memberId
+            })
+        });
+    }); 
 }
 
 const sugarreport = (req, res) =>{
@@ -165,5 +181,6 @@ const sugardelete = (req, res) => {
 module.exports = {
     addSugar : addSugar,
     sugarreport : sugarreport,
-    sugardelete : sugardelete
+    sugardelete : sugardelete,
+    getSugarDates : getSugarDates
 }

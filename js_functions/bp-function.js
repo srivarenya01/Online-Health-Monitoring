@@ -4,9 +4,9 @@ const {getMembers, getmember} = require('./member-function');
 function bp_check(sys, dia) {
     if (sys <= 90 && dia <= 60) {
       return "Low BP";
-    } else if (sys > 90 && sys < 120 && dia > 60 && dia < 80) {
+    } else if (sys > 90 && sys <= 120 && dia > 60 && dia <= 80) {
       return "Normal BP";
-    } else if (sys >= 120 && sys < 140 && dia >= 80 && dia < 90) {
+    } else if (sys > 120 && sys < 140 && dia > 80 && dia < 90) {
       return "Little High BP";
     } else if (sys >= 140 || dia >= 90) {
       return "High BP";
@@ -69,10 +69,10 @@ const addbp = (req, res) => {
 
 }
 
-const get_bp_history = (id) => {
+const get_bp_history = (id, startDate, endDate) => {
     return new Promise(function(resolve, reject) {
-        const sql = "SELECT * FROM bp WHERE member_id = ?";
-        user_details_con.query(sql, [id], function(err, result){
+        const sql = "SELECT * FROM bp WHERE member_id = ? and timestamp < ? and timestamp > ?";
+        user_details_con.query(sql, [id, endDate, startDate], function(err, result){
             if(err){
                 console.error(err);
                 res.redirect('/users/dashboard');
@@ -86,10 +86,28 @@ const get_bp_history = (id) => {
     });
 }
 
+const getBpDates = (req, res) => {
+    const memberId = req.params.id;
+    getmember(memberId).then(function(activeMember){
+        getMembers(req.session.userid).then(function(members){
+            res.render('dashboard/features/bp/bp-report.ejs', {
+                pagename : "BP Report",
+                username : req.session.username,
+                members : members, 
+                activeMember : activeMember,
+                bpHistory : null,
+                req_id : memberId
+            })
+        });
+    }); 
+}
+
 const bpreport = (req, res) =>{
     if(req.session.authenticated){  
         const memberId = req.params.id;
-        get_bp_history(memberId).then(function(history){
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+        get_bp_history(memberId, startDate, endDate).then(function(history){
             getmember(memberId).then(function(activeMember){
                 getMembers(req.session.userid).then(function(members){
                     res.render('dashboard/features/bp/bp-report.ejs', {
@@ -157,5 +175,6 @@ const bpdelete = (req, res) => {
 module.exports = {
     addbp : addbp,
     bpreport : bpreport,
-    bpdelete : bpdelete
+    bpdelete : bpdelete,
+    getBpDates : getBpDates
 }
